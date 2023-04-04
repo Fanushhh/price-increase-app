@@ -79,16 +79,35 @@ export default function Form(){
     const [result, setResult] = useState('');
     const [color, setColor] = useState('black');
     const [copied, setCopied] = useState(false);
-    const errorField = 'I can accept only numbers';
-    function validateFields(e){
-        const input = e.target.value;
+    const [firstInputField, setFirstInputField] = useState('');
+    const [secondInputField, setSecondInputField] = useState('');
+
+
+    function validateFields(input){
         const numbersRegex = /^-?\d*\.?\d+$/;
         if(input.match(numbersRegex)){
-            setIsDisabled(false)
+            return true;
         }else{
-            setIsDisabled(true);
+            return false;
         }
     }
+
+    function handlefirstInputChange(e){
+        if(!validateFields(e.target.value)){
+            setFirstInputField('Can only accept numbers')
+        }else{
+            setFirstInputField('')
+        }
+    }
+    function handlesecondInputChange(e){
+        if(!validateFields(e.target.value)){
+            setSecondInputField('Can only accept numbers')
+        }else{
+            setSecondInputField('')
+        }
+    }
+
+
     function handleSubmit(e){
         e.preventDefault();
         const oldPrice = e.target.old.value;
@@ -111,12 +130,13 @@ export default function Form(){
             <StyledForm onSubmit={handleSubmit}>
                 <StyledInput>
                     <label htmlFor="oldPrice">Old price</label>
-                    <input onChange={validateFields} type="text" name='old' placeholder="Old price" id='oldPrice'/>
-                    <ErrorField>{isDisabled ? errorField : ''}</ErrorField>
+                    <input onChange={handlefirstInputChange} type="text" name='old' placeholder="Old price" id='oldPrice'/>
+                    <ErrorField>{firstInputField}</ErrorField>
                 </StyledInput>
                 <StyledInput>
                     <label htmlFor="newPrice">New price</label>
-                    <input type="text" placeholder="Old price" name='new' id='newPrice'/>
+                    <input onChange={handlesecondInputChange} type="text" placeholder="Old price" name='new' id='newPrice'/>
+                    <ErrorField>{secondInputField}</ErrorField>
                 </StyledInput>
                 <StyledButton type="submit" disabled={isDisabled}>Calculate</StyledButton>
             </StyledForm>
